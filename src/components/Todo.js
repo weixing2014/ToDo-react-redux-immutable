@@ -31,12 +31,12 @@ export default class Todo extends PureComponent {
       <li className="list-group-item">
         <span className={classNames}
             onClick={() => this.props.dispatch(completeTodo(id))}>
+          <input className="todo-checkbox" type="checkbox" checked={isCompleted} />
           {text}
+          <span className="close" onClick={() => this.props.dispatch(deleteTodo(id))}>
+            &times;
+          </span>
         </span>
-        <div className="close"
-            onClick={() => this.props.dispatch(deleteTodo(id))}>
-          &times;
-        </div>
       </li>
     );
   }

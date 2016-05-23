@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import ReactDOM from 'react-dom';
 import { deleteTodo, completeTodo, toggleEditing, updateText } from 'actions/todos';
 import PureComponent from './PureComponent';
 import cn from 'classnames';
@@ -22,10 +23,21 @@ export default class Todo extends PureComponent {
     console.info('%cToDo unmounting - ID: ' + this.props.todo.get('id'), 'color:orange; font-weight:bold;');
   }
 
-  onTodoInputSubmit() {
+  onTodoInputSubmit(e) {
     const { id } = this.props.todo.toObject();
+
+    e.preventDefault()
     this.props.dispatch(updateText({id, text: this.refs.todoInput.value}))
     this.props.dispatch(toggleEditing(id))
+  }
+
+  onEditClick() {
+    const { id } = this.props.todo.toObject();
+
+    this.props.dispatch(toggleEditing(id))
+    setTimeout(() => {
+      ReactDOM.findDOMNode(this.refs.todoInput).select()
+    }, 100);
   }
 
   render() {
@@ -37,12 +49,14 @@ export default class Todo extends PureComponent {
     if (editing) {
       return (
         <li className="list-group-item">
-          <div className="input-group">
-            <input ref="todoInput" type="text" className="form-control" defaultValue={text} />
-            <span className="input-group-btn">
-              <button className="btn btn-default" type="button" onClick={ () => this.onTodoInputSubmit() }>OK</button>
-            </span>
-          </div>
+          <form onSubmit={ (e) => this.onTodoInputSubmit(e) }>
+            <div className="input-group">
+              <input ref="todoInput" type="text" className="form-control" defaultValue={text} />
+              <span className="input-group-btn">
+                <input className="btn btn-default" type="submit" value="OK" />
+              </span>
+            </div>
+          </form>
         </li>
       )
     } else {
@@ -54,7 +68,7 @@ export default class Todo extends PureComponent {
             <span className="close" onClick={() => this.props.dispatch(deleteTodo(id))}>
               &times;
             </span>
-            <span className="close" onClick={() => this.props.dispatch(toggleEditing(id))}>
+            <span onClick={() => this.onEditClick()}>
               edit
             </span>
           </span>

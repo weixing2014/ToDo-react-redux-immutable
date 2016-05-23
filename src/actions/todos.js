@@ -9,3 +9,5 @@ export const deleteAllTodos = () => {
   idCounter = 0;
   return { type: types.DELETE_ALL_TODOS };
 };
+export const toggleEditing = id => ({ type: types.TOGGLE_EDITING, id });
+export const updateText = ({id, text}) => ({ type: types.UPDATE_TEXT, id, text });

@@ -9,6 +9,7 @@ function todoList(state = List(), action) {
         id: action.id,
         text: action.text,
         isCompleted: false,
+        editing: false,
       }));
 
     case types.COMPLETE_TODO:
@@ -25,6 +26,22 @@ function todoList(state = List(), action) {
 
     case types.DELETE_ALL_TODOS:
       return state.clear();
+
+    case types.TOGGLE_EDITING:
+      return state.map(todo => {
+        if (todo.get('id') === action.id) {
+          return todo.update('editing', v => !v);
+        }
+        return todo;
+      });
+
+    case types.UPDATE_TEXT:
+      return state.map(todo => {
+        if (todo.get('id') === action.id) {
+          return todo.set('text', action.text);
+        }
+        return todo;
+      });
 
     default:
       return state;
